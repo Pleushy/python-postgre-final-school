@@ -14,8 +14,9 @@ options = [
         Items.FIND_OBEC,
         Items.STATS_OKRES
 ]
- 
+
 def choose_new_menu(a):
+        query = None
         command = None
         item = options[a]
  
@@ -23,13 +24,18 @@ def choose_new_menu(a):
         elif item.name == Items.LIST_OKRES.name:
                 command = "SELECT * FROM okresy LIMIT 5;"
         elif item.name == Items.LIST_OBEC.name:
-                command = "SELECT * FROM obce_pob LIMIT 5;"
+                query = input("Zadej kod okresu: ")
+                command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres LIKE '%%s%' GROUP BY obce_pob.nazev LIMIT 5;"
         elif item.name == Items.FIND_OBEC.name:
-                pass
+                query = input("Zadej nazev obce: ")
+                command = "SELECT nazev FROM obce_pob WHERE nazev LIKE '%%s%' LIMIT 5;"
         elif item.name == Items.STATS_OKRES.name:
-                pass
+                query = input("Zadej kod okresu: ")
+                command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres LIKE '%%s%' GROUP BY obce_pob.nazev LIMIT 5;"
  
-        return command
+        if query is not None: query = tuple(query.split(", "))
+
+        return (command, query)
  
 def menu():
         print("""

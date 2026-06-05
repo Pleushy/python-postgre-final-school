@@ -16,17 +16,17 @@ class Connection:
                 self.conn.close()
         def getCursor(self):
                 return self.cursor
-        def execute(self, command):
-                self.cursor.execute(command)
+        def execute(self, result):
+                self.cursor.execute(result[0], (result[1]))
                 rows = self.cursor.fetchall()
                 for r in rows:
                         print(r)
  
 def main():
-        c = Connection()
+        #c = Connection()
         result = ui.menu()
-        c.execute(result)
-        c.kill()
+        #c.execute(result)
+        #c.kill()
  
 if __name__ == "__main__":
         main()
