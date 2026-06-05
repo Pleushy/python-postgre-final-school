@@ -22,18 +22,21 @@ def choose_new_menu(a):
  
         if item.name == Items.END.name: return
         elif item.name == Items.LIST_OKRES.name:
-                command = "SELECT * FROM okresy LIMIT 5;"
+                command = "SELECT * FROM okresy;"
         elif item.name == Items.LIST_OBEC.name:
                 query = input("Zadej kod okresu: ")
-                command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres LIKE '%%s%' GROUP BY obce_pob.nazev LIMIT 5;"
+                command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;"
         elif item.name == Items.FIND_OBEC.name:
                 query = input("Zadej nazev obce: ")
-                command = "SELECT nazev FROM obce_pob WHERE nazev LIKE '%%s%' LIMIT 5;"
+                command = "SELECT nazev FROM obce_pob WHERE nazev ILIKE (%s);"
         elif item.name == Items.STATS_OKRES.name:
                 query = input("Zadej kod okresu: ")
-                command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres LIKE '%%s%' GROUP BY obce_pob.nazev LIMIT 5;"
+                command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;"
  
-        if query is not None: query = tuple(query.split(", "))
+        if query is not None:
+                query = query.split(", ")
+                for i in range(len(query)): query[i] = f"%{query[i]}%"
+                query = tuple(query)
 
         return (command, query)
  

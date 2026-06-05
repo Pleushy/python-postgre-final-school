@@ -17,10 +17,9 @@ class Connection:
         def getCursor(self):
                 return self.cursor
         def execute(self, result):
-                self.cursor.execute(result[0], (result[1]))
+                self.cursor.execute(result[0], result[1])
                 rows = self.cursor.fetchall()
-                for r in rows:
-                        print(r)
+                for r in rows: print(r)
  
 def main():
         #c = Connection()
