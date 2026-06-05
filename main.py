@@ -17,14 +17,17 @@ class Connection:
         def getCursor(self):
                 return self.cursor
         def execute(self, result):
+                if result is None: return
                 self.cursor.execute(result[0], result[1])
-                rows = self.cursor.fetchall()
-                for r in rows: print(r)
+                return self.cursor.fetchall()
  
 def main():
         #c = Connection()
-        result = ui.menu()
-        #c.execute(result)
+        feedback = True
+        while feedback:
+                request = ui.menu()
+                #result = c.execute(request)
+                #feedback = ui.finish(result)
         #c.kill()
  
 if __name__ == "__main__":

@@ -39,6 +39,11 @@ def choose_new_menu(a):
                 query = tuple(query)
 
         return (command, query)
+
+def finish(a):
+        if a is None: return True
+        for i in a:
+                print(a)
  
 def menu():
         print("""
