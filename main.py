@@ -16,18 +16,18 @@ class Connection:
                 self.conn.close()
         def getCursor(self):
                 return self.cursor
-        def execute(self, result):
-                if result is None: return
-                self.cursor.execute(result[0], result[1])
+        def execute(self, req):
+                if req is None: return None
+                self.cursor.execute(req.command, req.query)
                 return self.cursor.fetchall()
  
 def main():
         #c = Connection()
-        feedback = True
-        while feedback:
-                request = ui.menu()
-                #result = c.execute(request)
-                #feedback = ui.finish(result)
+        res = 1
+        while res is not None:
+                req = ui.request()
+                #res = c.execute(req)
+                #if res is not None: ui.submit(res, req.format)
         #c.kill()
  
 if __name__ == "__main__":

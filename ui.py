@@ -15,37 +15,49 @@ options = [
         Items.STATS_OKRES
 ]
 
-def choose_new_menu(a):
+def submit(data, format):
+        # TODO: replace $ with values in data
+        print(data, format)
+
+def getCommand(a):
         query = None
         command = None
+        format = None
         item = options[a]
  
-        if item.name == Items.END.name: return
+        if item.name == Items.END.name: return None
         elif item.name == Items.LIST_OKRES.name:
                 command = "SELECT * FROM okresy;"
+                format = "$"
         elif item.name == Items.LIST_OBEC.name:
                 query = input("Zadej kod okresu: ")
                 command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;"
+                format = "$ - $\nPocet obyvatel: $\nPrumerny vek: $"
         elif item.name == Items.FIND_OBEC.name:
                 query = input("Zadej nazev obce: ")
                 command = "SELECT nazev FROM obce_pob WHERE nazev ILIKE (%s);"
+                format = "$"
         elif item.name == Items.STATS_OKRES.name:
+                # TODO: finish
                 query = input("Zadej kod okresu: ")
-                command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;"
- 
+                command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;" 
+                format = ""
+        # TODO: add more commands
+
         if query is not None:
                 query = query.split(", ")
                 for i in range(len(query)): query[i] = f"%{query[i]}%"
                 query = tuple(query)
 
-        return (command, query)
+        output = {
+                "command":command,
+                "query":query,
+                "format":format
+        }
 
-def finish(a):
-        if a is None: return True
-        for i in a:
-                print(a)
+        return output
  
-def menu():
+def request():
         print("""
 =========================
  DEMOGRAFIE ČR
@@ -64,4 +76,4 @@ def menu():
                         print(f"Please input a number between 0 and {len(options)-1}\n")
                         continue
                 break
-        return choose_new_menu(a)
+        return getCommand(a)
