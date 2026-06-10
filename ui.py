@@ -16,6 +16,7 @@ options = [
 ]
 
 def submit(data, format):
+	print(data)
 	for chunk in data:
 		print("==========  DATA CHUNK  ==========")
 		for i in chunk:
