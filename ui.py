@@ -16,11 +16,11 @@ options = [
 ]
 
 def submit(data, format):
-	print("==========  DATA CHUNK  ==========")
 	for chunk in data:
+		print("==========  DATA CHUNK  ==========")
 		for i in chunk:
 			format = format.replace("$", str(i), 1)
-	print(format, end='\n\n')
+		print(format, end='\n\n')
 
 def getCommand(a):
 	query = None
