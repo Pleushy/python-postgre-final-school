@@ -6,23 +6,24 @@ class Items(Enum):
 	LIST_OBEC = "Obce v okrese"
 	FIND_OBEC = "Hledat obec"
 	STATS_OKRES = "Statistiky okresu"
+	TOP_OBEC = "Top 10 nejvetsich obci"
  
 options = [
 	Items.END,
 	Items.LIST_OKRES,
 	Items.LIST_OBEC,
 	Items.FIND_OBEC,
-	Items.STATS_OKRES
+	Items.STATS_OKRES,
+	Items.TOP_OBEC
 ]
 
 def submit(data, format):
-	print(data)
 	for chunk in data:
-		print("==========  DATA CHUNK  ==========")
 		output=format
 		for i in chunk:
 			output = output.replace("$", str(i), 1)
-		print(output, end='\n\n')
+		if output.count('\n') > 0: output += '\n'
+		print(output, end='')
 
 def getCommand(a):
 	query = None
@@ -36,18 +37,19 @@ def getCommand(a):
 		format = "$ $"
 	elif item.name == Items.LIST_OBEC.name:
 		query = input("Zadej kod okresu: ")
-		command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;"
-		format = "$\nPocet obyvatel: $\nPrumerny vek: $"
+		command = "SELECT obce_pob.id_okres, obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;"
+		format = "$ $\nPocet obyvatel: $\nPrumerny vek: $"
 	elif item.name == Items.FIND_OBEC.name:
 		query = input("Zadej nazev obce: ")
-		command = "SELECT nazev FROM obce_pob WHERE nazev ILIKE (%s);"
-		format = "$"
+		command = "SELECT id_okres, nazev FROM obce_pob WHERE nazev ILIKE (%s);"
+		format = "$ $"
 	elif item.name == Items.STATS_OKRES.name:
-		# TODO: finish
 		query = input("Zadej kod okresu: ")
-		command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;" 
-		format = ""
-	# TODO: add more commands
+		command = "SELECT obce_pob.id_okres, obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek, AVG(obce_pob.prumerny_vek_muzi)/AVG(obce_pob.prumerny_vek_zeny) AS pomer FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;" 
+		format = "$ $\nPocet obyvatel: $\nPrumerny vek: $\nPomer muzi zeny: $"
+	elif item.name == Items.TOP_OBEC.name:
+		command = "SELECT obce_pob.id_okres, obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel FROM obce_pob JOIN okresy ON obce_pob.id_okres == okresy.id_okres ORDER BY pocet_obyvatel DESC LIMIT 10"
+		format = "$ $ - $ obyvatel"
 
 	if query is not None:
 		query = query.split(", ")
