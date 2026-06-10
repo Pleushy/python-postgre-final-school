@@ -16,10 +16,11 @@ options = [
 ]
 
 def submit(data, format):
+	print("==========  DATA CHUNK  ==========")
 	for chunk in data:
 		for i in chunk:
 			format = format.replace("$", i)
-	print(format)
+	print(format, end='\n\n')
 
 def getCommand(a):
 	query = None
@@ -29,12 +30,12 @@ def getCommand(a):
  
 	if item.name == Items.END.name: return None
 	elif item.name == Items.LIST_OKRES.name:
-		command = "SELECT * FROM okresy;"
-		format = "$"
+		command = "SELECT id_okres, nazev FROM okresy;"
+		format = "$ $"
 	elif item.name == Items.LIST_OBEC.name:
 		query = input("Zadej kod okresu: ")
 		command = "SELECT obce_pob.nazev, SUM(obce_pob.pocet_obyvatel) AS pocet_obyvatel, AVG(obce_pob.prumerny_vek) AS prumerny_vek FROM obce_pob JOIN okresy ON obce_pob.id_okres = okresy.id_okres WHERE obce_pob.id_okres ILIKE (%s) GROUP BY obce_pob.nazev;"
-		format = "$ - $\nPocet obyvatel: $\nPrumerny vek: $"
+		format = "$\nPocet obyvatel: $\nPrumerny vek: $"
 	elif item.name == Items.FIND_OBEC.name:
 		query = input("Zadej nazev obce: ")
 		command = "SELECT nazev FROM obce_pob WHERE nazev ILIKE (%s);"

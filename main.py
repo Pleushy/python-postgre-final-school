@@ -22,13 +22,13 @@ class Connection:
 		return self.cursor.fetchall()
  
 def main():
-	#c = Connection()
+	c = Connection()
 	res = 1
 	while res is not None:
 		req = ui.request()
-		#res = c.execute(req)
-		#if res is not None: ui.submit(res, req['format'])
-	#c.kill()
+		res = c.execute(req)
+		if res is not None: ui.submit(res, req['format'])
+	c.kill()
  
 if __name__ == "__main__":
 	main()
