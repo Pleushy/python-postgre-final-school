@@ -18,6 +18,7 @@ options = [
 ]
 
 def submit(data, format):
+	print()
 	for chunk in data:
 		output=format
 		for i in chunk:
@@ -83,5 +84,4 @@ def request():
 			print(f"Zadej cislo mezi 0 a {len(options)-1}\n")
 			continue
 		break
-	print()
 	return getCommand(a)
