@@ -19,7 +19,7 @@ def submit(data, format):
 	print("==========  DATA CHUNK  ==========")
 	for chunk in data:
 		for i in chunk:
-			format = format.replace("$", i)
+			format = format.replace("$", i,1)
 	print(format, end='\n\n')
 
 def getCommand(a):
