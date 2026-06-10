@@ -80,7 +80,8 @@ def request():
 			if a < 0 or a > len(options)-1:
 				raise Exception()
 		except Exception:
-			print(f"Please input a number between 0 and {len(options)-1}\n")
+			print(f"Zadej cislo mezi 0 a {len(options)-1}\n")
 			continue
 		break
+	print()
 	return getCommand(a)
