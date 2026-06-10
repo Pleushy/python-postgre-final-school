@@ -18,7 +18,7 @@ class Connection:
 		return self.cursor
 	def execute(self, req):
 		if req is None: return None
-		self.cursor.execute(req.command, req.query)
+		self.cursor.execute(req['command'], req['query'])
 		return self.cursor.fetchall()
  
 def main():
@@ -27,7 +27,7 @@ def main():
 	while res is not None:
 		req = ui.request()
 		#res = c.execute(req)
-		#if res is not None: ui.submit(res, req.format)
+		#if res is not None: ui.submit(res, req['format'])
 	#c.kill()
  
 if __name__ == "__main__":
